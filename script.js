@@ -14,6 +14,7 @@ const resultMessage = document.getElementById("result-message");
 const restartButton = document.getElementById("restart-btn");
 const progressBar = document.getElementById("progress");
 
+//questions
 const quizQuestions = [
   {
     question: "What is the capital of France?",
@@ -101,25 +102,25 @@ function showQuestion() {
 
   questionText.textContent = currentQuestion.question
 
+  //this answersContainer.innerHTML = ""; avoids the chopices to overflow
   answersContainer.innerHTML = "";
 
   currentQuestion.answers.forEach(answer => {
-    const button = decodeURIComponent.createElement("button")
+    const button = document.createElement("button")
     button.textContent = answer.text
     button.classList.add("answer-btn")
 
     //dataset is a property of the button element that allows you to store custom data
     button.dataset.correct = answer.correct
-
     button.addEventListener("click", selectAnswer)
 
     answersContainer.appendChild(button)
   })
 }
 
-function selectAnswer(event){
-//optimization check
-  if(answersDisabled) return 
+function selectAnswer(event) {
+  //optimization check
+  if (answersDisabled) return
 
   answersDisabled = true
 
@@ -127,20 +128,52 @@ function selectAnswer(event){
   const isCorrect = selectedButton.dataset.correct === "true"
 
   Array.from(answersContainer.children).forEach(button => {
-    if(button.dataset.correct === "true"){
+    if (button.dataset.correct === "true") {
       button.classList.add("correct");
-    } else {
+    } else if (button === selectedButton) {
       button.classList.add("incorrect");
     }
   });
 
-  if(isCorrect){
+  if (isCorrect) {
     score++;
     scoreSpan.textContent = score
   }
-//todo 
+
+  setTimeout(() => {
+    currentQuestionIndex++;
+    //check if there are another questions or there are no longer questions in query
+    if (currentQuestionIndex < quizQuestions.length) {
+      showQuestion();
+    } else {
+      showResults()
+    }
+  }, 1000);
+}
+
+function showResults() {
+  quizScreen.classList.remove("active")
+  resultScreen.classList.add("active")
+
+  finalScoreSpan.textContent = score;
+
+  const percentage = (score / quizQuestions.length) * 100
+
+  if (percentage === 100) {
+    resultMessage.textContent = "Perfect! You are genuis!"
+  } else if (percentage >= 80) {
+    resultMessage.textContent = "Great Job! You did well!"
+  } else if (percentage >= 60) {
+    resultMessage.textContent = "Good effort! Keep learning ahead!"
+  } else if (percentage >= 40) {
+    resultMessage.textContent = "Not bad! Try again to improve!"
+  } else {
+    resultMessage.textContent = "Keep studying! You'll get better!"
+  }
 }
 
 function restartQuiz() {
+  resultScreen.classList.remove("active")
 
+  startQuiz();
 }

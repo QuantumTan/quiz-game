@@ -121,6 +121,11 @@ body {
 
 /* result screen */
 
+#result-header{
+  color: #e86a33;
+  margin-bottom: 30px;
+}
+
 #result-screen {
   color: #e86a33;
   margin-bottom: 30px;
