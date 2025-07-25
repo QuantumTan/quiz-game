@@ -127,6 +127,8 @@ function selectAnswer(event) {
   const selectedButton = event.target;
   const isCorrect = selectedButton.dataset.correct === "true"
 
+
+  //Array.from() is used to convert the NodeList returned by answersContainer.children into an array, this is because the nodelist is not an array that is why wer needed to used the for each method.
   Array.from(answersContainer.children).forEach(button => {
     if (button.dataset.correct === "true") {
       button.classList.add("correct");
